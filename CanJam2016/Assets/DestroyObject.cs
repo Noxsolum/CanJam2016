@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class KeyboardVisualiser : MonoBehaviour {
+public class DestroyObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -12,4 +12,9 @@ public class KeyboardVisualiser : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    void OnTriggerEnter(Collider col)
+    {
+        Destroy(col.gameObject);
+    }
 }

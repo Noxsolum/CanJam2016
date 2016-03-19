@@ -5,6 +5,7 @@ public class PanelManager : MonoBehaviour
 {
     public GameObject tilePrefab;
     public GameObject currentPanel;
+    public GameObject[] prefabs;
 
 	// Use this for initialization
 	void Start ()
@@ -22,7 +23,14 @@ public class PanelManager : MonoBehaviour
 
     public void spawnPanel()
     {
-        currentPanel = (GameObject)Instantiate(tilePrefab, currentPanel.transform.GetChild(0).transform.GetChild(Random.Range(0, 2)).position, Quaternion.identity);
+        int rand = Random.Range(0, 2);
+        currentPanel = (GameObject)Instantiate(tilePrefab, currentPanel.transform.GetChild(0).transform.GetChild(rand).position, Quaternion.identity);
+        if (rand == 0)
+        {
+            int prefabNum = 0; //Random.Range(0, 3);
+            Instantiate(prefabs[prefabNum], currentPanel.transform.GetChild(0).transform.GetChild(rand).position, Quaternion.identity);
+        }
+        else { }
 
     }
 }

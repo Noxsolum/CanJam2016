@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/CanJam2016.unity
+  isLoaded: 1
+  isActive: 1

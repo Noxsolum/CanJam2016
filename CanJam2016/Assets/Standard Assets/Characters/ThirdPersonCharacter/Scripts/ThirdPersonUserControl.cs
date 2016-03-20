@@ -21,8 +21,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         float duckTime = .5f, duckTimeLimit = .5f;
         bool keyPressed = false;
 
-        [SerializeField]
-        public InputField inputObject;
+        [SerializeField] public InputField inputObject;
+        [SerializeField] public Slider runSlider;
         public string sSave;
 
         //ThirdPersonCharacter characterScript = 
@@ -49,6 +49,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private void Update()
         {
             sSave = inputObject.text;
+
+            runSlider.value = runTime;
         }
 
 

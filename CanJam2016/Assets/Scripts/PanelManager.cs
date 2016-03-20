@@ -3,9 +3,10 @@ using System.Collections;
 
 public class PanelManager : MonoBehaviour
 {
-    public GameObject tilePrefab;
+    public GameObject[] tilePrefab;
     public GameObject currentPanel;
     public GameObject[] prefabs;
+
     public DestroyObject scene;
 
 	// Use this for initialization
@@ -29,13 +30,13 @@ public class PanelManager : MonoBehaviour
     public void spawnPanel()
     {
         int rand = Random.Range(0, 2);
-        currentPanel = (GameObject)Instantiate(tilePrefab, currentPanel.transform.GetChild(0).transform.GetChild(rand).position, Quaternion.identity);
+        Vector3 position = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x) + 0.0f, (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.y), (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z) + 2.0f);
+        Vector3 fencePosition = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x), (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.y) + 1.5f, (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z) - 7.0f);
+        currentPanel = (GameObject)Instantiate(tilePrefab[rand], position, Quaternion.identity);
         if (rand == 0)
         {
             int prefabNum = 0; //Random.Range(0, 3);
-            Vector3 position = new Vector3 (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x, 2.0f, currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z);
-
-            Instantiate(prefabs[prefabNum], position, Quaternion.identity);
+            Instantiate(prefabs[prefabNum], fencePosition, Quaternion.identity);
 
             scene.numOfObjects++;
         }

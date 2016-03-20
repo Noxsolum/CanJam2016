@@ -74,8 +74,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="Assets\Scripts\KeyboardVisualiser.cs" />
     <Compile Include="Assets\Scripts\PanelManager.cs" />
+=======
+    <Compile Include="Assets\DestroyObject.cs" />
+>>>>>>> origin/Steven
     <Compile Include="Assets\SkySphere_V1\Examples\Gui.cs" />
     <Compile Include="Assets\SkySphere_V1\Examples\MouseLook.cs" />
   </ItemGroup>

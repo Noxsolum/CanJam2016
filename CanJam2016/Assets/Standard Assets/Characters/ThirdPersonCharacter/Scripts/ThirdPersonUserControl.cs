@@ -48,6 +48,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             // read inputs
             float h = CrossPlatformInputManager.GetAxis("Horizontal");
             float v = CrossPlatformInputManager.GetAxis("Vertical");
+<<<<<<< HEAD
+=======
+            bool crouch = false;
+>>>>>>> origin/Steven
 
             // calculate move direction to pass to character
             if (m_Cam != null)

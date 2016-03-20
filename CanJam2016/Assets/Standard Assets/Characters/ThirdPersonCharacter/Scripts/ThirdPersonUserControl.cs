@@ -26,7 +26,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         [SerializeField] public Text gameOver;
         public string sSave;
 
-        //ThirdPersonCharacter characterScript = 
+        public GameObject explosion;
 
         private void Start()
         {
@@ -68,13 +68,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         // Fixed update is called in sync with physics
         private void FixedUpdate()
         {
+            Vector3 realForward = new Vector3(0.017f, 0.0f, 1.0f);
+
             if (gameOver.text != "Game Over - Press 'esc' to restart")
             {
                 if (Input.GetKeyDown("left ctrl"))
                 {
                     keyPressed = true;
 
-                    if (inputObject.text == "run")
+                    if (inputObject.text == "run" || inputObject.text == "right" || inputObject.text == "left")
                     {
                         runTime = 0.0f;
                         deathTimer = 0.0f;
@@ -97,7 +99,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 if (keyPressed)
                 {
                     if (sSave == "run" || running)
-                        m_Move = Vector3.forward;
+                        m_Move = realForward;
+
+                    if (sSave == "left")
+                    {
+                        m_Move = Vector3.left;
+                        print(m_Move);
+                    }
+
+                    if (sSave == "right")
+                    {
+                        m_Move = Vector3.right;
+                        print(m_Move);
+                    }
 
                     if (sSave == "jump")
                         m_Jump = true;
@@ -128,6 +142,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
             else
             {
+                explosion.SetActive(true);
+
                 if (Input.GetKeyDown("escape"))
                 {
                     Application.LoadLevel(0);

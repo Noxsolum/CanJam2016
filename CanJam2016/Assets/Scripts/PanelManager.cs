@@ -9,10 +9,12 @@ public class PanelManager : MonoBehaviour
 
     public DestroyObject scene;
 
+    private int fenceSpawnDistance;
+
 	// Use this for initialization
 	void Start ()
     {
-        //scene = new global::DestroyObject();
+        fenceSpawnDistance = 0;
 
         for (int i = 0; i < 10; i++)
         {
@@ -34,18 +36,23 @@ public class PanelManager : MonoBehaviour
         Vector3 position = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x) + 0.0f, (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.y), (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z));;
         Vector3 fencePosition = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x), (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.y) + 1.5f, (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z) - 7.0f);
         
-        if (rand2 == 0)
+        if (rand2 == 0 && fenceSpawnDistance < 0)
         {
+            //Fence
             int prefabNum = 0; //Random.Range(0, 3);
             Instantiate(prefabs[prefabNum], fencePosition, Quaternion.identity);
 
             scene.numOfObjects++;
+            fenceSpawnDistance = 5;
         }
         else if(rand2 > 5)
         {
-            position = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x) + 0.0f, (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.y), (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z) + 2.5f);
+            //Pit
+            position = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x) + 0.0f, (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.y), (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z) + 3.0f);
         }
 
+        fenceSpawnDistance--;
+        
         currentPanel = (GameObject)Instantiate(tilePrefab[rand], position, Quaternion.identity);
     }
 }

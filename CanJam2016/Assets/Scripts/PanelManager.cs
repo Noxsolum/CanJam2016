@@ -33,7 +33,7 @@ public class PanelManager : MonoBehaviour
         if (rand == 0)
         {
             int prefabNum = 0; //Random.Range(0, 3);
-            Vector3 position = new Vector3 (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x, 1.5f, currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z);
+            Vector3 position = new Vector3 (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x, 2.0f, currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z);
 
             Instantiate(prefabs[prefabNum], position, Quaternion.identity);
 

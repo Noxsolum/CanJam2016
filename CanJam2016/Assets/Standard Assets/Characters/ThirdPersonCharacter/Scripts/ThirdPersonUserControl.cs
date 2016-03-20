@@ -11,21 +11,22 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private ThirdPersonCharacter m_Character;
         public ThirdPersonCharacter n_Character; // A reference to the ThirdPersonCharacter on the object
         private Transform m_Cam;                  // A reference to the main camera in the scenes transform
-        private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
         private bool m_Duck;
 
         private bool running, ducking;
-        float runTime = 4.0f, runTimeLimit = 4.0f;
-        float duckTime = .5f, duckTimeLimit = .5f;
-        bool keyPressed = false;
+        float runTime = 6.0f, runTimeLimit = 6.0f;
+        float duckTime = 1.0f, duckTimeLimit = 1.0f;
+        bool keyPressed = false, gameStarted = false;
+        float deathTimer = 0.0f, deathTimeLimit = 6.0f;
 
-        [SerializeField]
-        public InputField inputObject;
+        [SerializeField] public InputField inputObject;
+        [SerializeField] public Slider runSlider;
+        [SerializeField] public Text gameOver;
         public string sSave;
 
-        //ThirdPersonCharacter characterScript = 
+        public GameObject explosion;
 
         private void Start()
         {
@@ -49,62 +50,105 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private void Update()
         {
             sSave = inputObject.text;
+
+            runSlider.value = runTime;
+
+            if (gameStarted)
+            {
+                if (deathTimer < deathTimeLimit)
+                    deathTimer += Time.deltaTime;
+                else
+                {
+                    gameOver.text = "Game Over - Press 'esc' to restart";
+                }
+            }
         }
 
 
         // Fixed update is called in sync with physics
         private void FixedUpdate()
         {
-            if (Input.GetKeyDown("left ctrl"))
+            Vector3 realForward = new Vector3(0.017f, 0.0f, 1.0f);
+
+            if (gameOver.text != "Game Over - Press 'esc' to restart")
             {
-                keyPressed = true;
+                if (Input.GetKeyDown("left ctrl"))
+                {
+                    keyPressed = true;
 
-                if (inputObject.text == "run")
-                    runTime = 0.0f;
+                    if (inputObject.text == "run" || inputObject.text == "right" || inputObject.text == "left")
+                    {
+                        runTime = 0.0f;
+                        deathTimer = 0.0f;
+                    }
 
-                if (inputObject.text == "duck")
-                    duckTime = 0.0f;
+                    if (inputObject.text == "duck")
+                        duckTime = 0.0f;
 
-                inputObject.text = "";
+                    inputObject.text = "";
+
+                    gameStarted = true;
+                }
+
+                if (runTime < runTimeLimit)
+                    running = true;
+
+                if (duckTime < duckTimeLimit)
+                    ducking = true;
+
+                if (keyPressed)
+                {
+                    if (sSave == "run" || running)
+                        m_Move = realForward;
+
+                    if (sSave == "left")
+                    {
+                        m_Move = Vector3.left;
+                        print(m_Move);
+                    }
+
+                    if (sSave == "right")
+                    {
+                        m_Move = Vector3.right;
+                        print(m_Move);
+                    }
+
+                    if (sSave == "jump")
+                        m_Jump = true;
+
+                    if (sSave == "duck" || ducking)
+                        m_Duck = true;
+
+                    keyPressed = false;
+                    sSave = "";
+                }
+
+                runTime += Time.deltaTime;
+                duckTime += Time.deltaTime;
+
+                if (runTime >= runTimeLimit)
+                {
+                    keyPressed = false;
+                    running = false;
+                    m_Move = new Vector3(0.0f, 0.0f, 0.0f);
+                }
+
+                if (duckTime >= duckTimeLimit)
+                    m_Duck = false;
+
+                // pass all parameters to the character control script
+                m_Character.Move(m_Move, m_Duck, m_Jump);
+                m_Jump = false;
             }
-
-            if (runTime < runTimeLimit)
-                running = true;
-
-            if (duckTime < duckTimeLimit)
-                ducking = true;
-
-            if (keyPressed)
+            else
             {
-                if (sSave == "run" || running)
-                    m_Move = Vector3.forward;
+                explosion.SetActive(true);
 
-                if (sSave == "jump")
-                    m_Jump = true;
-
-                if (sSave == "duck" || ducking)
-                    m_Duck = true;
-
-                keyPressed = false;
-                sSave = "";
+                if (Input.GetKeyDown("escape"))
+                {
+                    Application.LoadLevel(0);
+                }
             }
-
-            runTime += Time.deltaTime;
-            duckTime += Time.deltaTime;
-
-            if (runTime >= runTimeLimit)
-            {
-                keyPressed = false;
-                running = false;
-                m_Move = new Vector3(0.0f, 0.0f, 0.0f);
-            }
-
-            if (duckTime >= duckTimeLimit)
-                m_Duck = false;
-
-            // pass all parameters to the character control script
-            m_Character.Move(m_Move, m_Duck, m_Jump);
-            m_Jump = false;
         }
     }
 }

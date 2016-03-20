@@ -3,15 +3,21 @@ using System.Collections;
 
 public class PanelManager : MonoBehaviour
 {
-    public GameObject tilePrefab;
+    public GameObject[] tilePrefab;
     public GameObject currentPanel;
     public GameObject[] prefabs;
+
     public DestroyObject scene;
+
+    private int fenceSpawnDistance;
+    private bool leftCornerSpawned, rightCornerSpawned;
 
 	// Use this for initialization
 	void Start ()
     {
-        //scene = new global::DestroyObject();
+        fenceSpawnDistance = 0;
+        leftCornerSpawned = true;
+        rightCornerSpawned = true;
 
         for (int i = 0; i < 10; i++)
         {
@@ -28,18 +34,58 @@ public class PanelManager : MonoBehaviour
 
     public void spawnPanel()
     {
-        int rand = Random.Range(0, 2);
-        currentPanel = (GameObject)Instantiate(tilePrefab, currentPanel.transform.GetChild(0).transform.GetChild(rand).position, Quaternion.identity);
-        if (rand == 0)
+        int rand = Random.Range(0, 3);
+        int rand2 = Random.Range(0, 10);
+        int rand3 = Random.Range(0, 2);
+        int index = 0;
+        Vector3 position = new Vector3(currentPanel.transform.GetChild(0).transform.GetChild(0).position.x, currentPanel.transform.GetChild(0).transform.GetChild(0).position.y, (currentPanel.transform.GetChild(0).transform.GetChild(0).position.z));
+        Vector3 fencePosition = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(0).position.x), (currentPanel.transform.GetChild(0).transform.GetChild(0).position.y) + 1.5f, (currentPanel.transform.GetChild(0).transform.GetChild(0).position.z) - 7.0f);
+        
+        if (rand2 == 2 && !leftCornerSpawned && !rightCornerSpawned)
         {
-            int prefabNum = 0; //Random.Range(0, 3);
-            Vector3 position = new Vector3 (currentPanel.transform.GetChild(0).transform.GetChild(rand).position.x, 2.0f, currentPanel.transform.GetChild(0).transform.GetChild(rand).position.z);
+            index = 1;
+            leftCornerSpawned = true;
+            rightCornerSpawned = true;
+        }
+        else
+        {
+            
+        }
 
-            Instantiate(prefabs[prefabNum], position, Quaternion.identity);
+        if (rand2 == 4 && !rightCornerSpawned && !leftCornerSpawned)
+        {
+            index = 2;
+            rightCornerSpawned = true;
+            leftCornerSpawned = true;
+        }
+        else
+        {
+            
+        }
+
+        if (rand2 == 0 && fenceSpawnDistance < 0 && !rightCornerSpawned && !leftCornerSpawned)
+        {
+            //Fence
+            int prefabNum = 0; //Random.Range(0, 3);
+            Instantiate(prefabs[prefabNum], fencePosition, Quaternion.identity);
 
             scene.numOfObjects++;
-        }
-        else { }
+            fenceSpawnDistance = 5;
 
+            leftCornerSpawned = false;
+            rightCornerSpawned = false;
+        }
+        else if(rand2 > 5)
+        {
+            //Pit
+            position = new Vector3((currentPanel.transform.GetChild(0).transform.GetChild(0).position.x), (currentPanel.transform.GetChild(0).transform.GetChild(0).position.y), (currentPanel.transform.GetChild(0).transform.GetChild(0).position.z) + 1.5f);
+
+            leftCornerSpawned = false;
+            rightCornerSpawned = false;
+        }
+
+        fenceSpawnDistance--;
+        
+        currentPanel = (GameObject)Instantiate(tilePrefab[index], position, Quaternion.identity);
     }
 }
